@@ -1,38 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display app_temp from API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        #temperature {
+            margin-top: 20px;
+        }
+        input {
+            padding: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 5px 10px;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
 <body>
+    <h1>Apparent Temperature</h1>
+    
+    <!-- Input field for entering the text to append to the API URL -->
+    <input type="text" id="inputValue" placeholder="Enter value to append to URL">
+    
+    <!-- Button to trigger the fetch function -->
+    <button onclick="fetchAndDisplayTemperature()">Get Temperature</button>
+    
+    <div id="temperature">
+        <h2>Temperature: <span id="appTemp">Not available</span> °C</h2>
+    </div>
 
-<h2>UNIT 1 and 2 </h2>
-<br>
-<h4>One mark Questions</h4>
+    <script>
+        // Function to fetch the app_temp value from the API with the appended input and display it
+        function fetchAndDisplayTemperature() {
+            const input = document.getElementById("inputValue").value; // Get the input value
+            const apiUrl = `https://api.weatherbit.io/v2.0/current?&city=${input}&key=f79539052c804bf181a43e815185896a`; // Append the input to the API URL
 
-<br>
-* Define Protocol.<br>
-* What is world wide web?<br>
-* How to refer an external CSS file from HTML?<br>
-* What are the different selectors in CSS?<br>
-* How to display an alert using Java script?<br>
-
-<br>
-<h4>Two mark Questions</h4>
-<br>
-* Differentiate Internet and World Wide Web.<br>
-* Differentiate Client and Server.<br>
-* Illustrate how URL is used to address a specific resource on the world wide web.<br>
-* How to display the current date and time using Java script?<br>
-* Define regular expression for Indian pincode number which has exactly 6 digits. Also, Zero is not allowed as first digit. <br>
-* List 5 new html elements available in HTML 5<br>
-* Describe the use of Javascript DOM.<br>
-
-<br>
-<h4>Part B/C Questions</h4>
-<br>
-* Illustrate HTTP Request and HTTP Response with clear diagrams. <br>
-* Describe the use of protocols in Internet and World Wide Web in detail. <br>
-* Develop a website of your choice to demonstrate the use of Html table, form, link, list, image and multimedia.<br>
-* How Javascript DOM is used to create dynamic web pages? Demonstrate with a suitable example.<br>
-* Devleop a HTML form, style it with CSS and provide appropriate validation using client side scripting. <br>
-
-
+            fetch(apiUrl)
+                .then(response => response.json())  // Parse the JSON response
+                .then(data => {
+                    const appTemp = data.data[0].app_temp;  // Extract the app_temp value from the API response
+                    document.getElementById("appTemp").textContent = appTemp;  // Display it in the HTML
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    document.getElementById("appTemp").textContent = "Error fetching data"; // Handle error case
+                });
+        }
+    </script>
 </body>
 </html>
