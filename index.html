@@ -1,57 +1,835 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Display app_temp from API</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        #temperature {
-            margin-top: 20px;
-        }
-        input {
-            padding: 5px;
-            font-size: 16px;
-        }
-        button {
-            padding: 5px 10px;
-            font-size: 16px;
-            margin-left: 10px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Strings – A Beginner's Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Fraunces:ital,wght@0,300;0,700;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #181c27;
+    --card: #1e2333;
+    --border: #2a2f45;
+    --accent: #f7c948;
+    --accent2: #58e0c0;
+    --accent3: #f07aff;
+    --text: #dde3f5;
+    --muted: #7a85a3;
+    --code-bg: #12151f;
+    --green: #4eca8b;
+    --red: #ff6b6b;
+    --blue: #60aaff;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.75;
+    font-size: 15px;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, #0f1117 0%, #1a1230 50%, #0f1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 60px 40px 50px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 80% at 50% 0%, rgba(247,201,72,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(247,201,72,0.12);
+    border: 1px solid rgba(247,201,72,0.3);
+    color: var(--accent);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    color: #fff;
+    letter-spacing: -0.5px;
+    line-height: 1.15;
+  }
+  header h1 span { color: var(--accent); }
+  header p {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 15px;
+    max-width: 520px;
+    margin-inline: auto;
+  }
+  .toc-pills {
+    margin-top: 32px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+  }
+  .toc-pills a {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 5px 14px;
+    border-radius: 20px;
+    transition: all 0.2s;
+  }
+  .toc-pills a:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── Layout ── */
+  main {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Section ── */
+  .section {
+    margin-bottom: 56px;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(247,201,72,0.1);
+    border: 1px solid rgba(247,201,72,0.25);
+    padding: 2px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .section h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #fff;
+    letter-spacing: -0.2px;
+  }
+
+  /* ── Prose ── */
+  .prose { color: var(--text); margin-bottom: 16px; }
+  .prose strong { color: var(--accent2); font-weight: 500; }
+
+  /* ── Code Block ── */
+  .code-block {
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 16px 0;
+    position: relative;
+  }
+  .code-label {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 7px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .code-label::before {
+    content: '';
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 6px var(--green);
+  }
+  pre {
+    padding: 20px;
+    overflow-x: auto;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    line-height: 1.9;
+  }
+  /* Syntax colors */
+  .kw  { color: #c792ea; }   /* keywords */
+  .str { color: #c3e88d; }   /* strings */
+  .fn  { color: var(--blue); }  /* functions / methods */
+  .cm  { color: #546e7a; font-style: italic; }  /* comments */
+  .num { color: #f78c6c; }   /* numbers */
+  .op  { color: var(--accent2); }  /* operators */
+  .out { color: var(--accent); }   /* output */
+  .var { color: var(--text); }
+
+  /* ── Output Box ── */
+  .output-block {
+    background: #0a0d14;
+    border: 1px solid #1e3a2f;
+    border-left: 3px solid var(--green);
+    border-radius: 0 0 10px 10px;
+    padding: 14px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: var(--green);
+    margin-top: -1px;
+    line-height: 1.8;
+  }
+  .output-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* ── Info Callout ── */
+  .callout {
+    background: rgba(88, 224, 192, 0.06);
+    border: 1px solid rgba(88, 224, 192, 0.2);
+    border-left: 3px solid var(--accent2);
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 13.5px;
+    color: #b0e8df;
+    line-height: 1.7;
+  }
+  .callout strong { color: var(--accent2); }
+
+  /* ── Method Table ── */
+  .method-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+    margin: 16px 0;
+  }
+  .method-table th {
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .method-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(42,47,69,0.5);
+    vertical-align: top;
+  }
+  .method-table tr:last-child td { border-bottom: none; }
+  .method-table tr:hover td { background: var(--surface); }
+  code.inline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: rgba(247,201,72,0.1);
+    border: 1px solid rgba(247,201,72,0.2);
+    color: var(--accent);
+    padding: 1px 7px;
+    border-radius: 4px;
+  }
+  .method-table .muted { color: var(--muted); font-size: 12.5px; }
+
+  /* ── Scroll offset for anchors ── */
+  [id] { scroll-margin-top: 20px; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--muted);
+    font-size: 12px;
+    border-top: 1px solid var(--border);
+  }
+  footer span { color: var(--accent); }
+</style>
 </head>
 <body>
-    <h1>Apparent Temperature</h1>
-    
-    <!-- Input field for entering the text to append to the API URL -->
-    <input type="text" id="inputValue" placeholder="Enter value to append to URL">
-    
-    <!-- Button to trigger the fetch function -->
-    <button onclick="fetchAndDisplayTemperature()">Get Temperature</button>
-    
-    <div id="temperature">
-        <h2>Temperature: <span id="appTemp">Not available</span> °C</h2>
+
+<header>
+  <div class="badge">Python for Beginners</div>
+  <h1>Working with <span>Strings</span> in Python</h1>
+  <p>Learn through code — every concept shown with annotated examples.</p>
+  <nav class="toc-pills">
+    <a href="#creating">Creating</a>
+    <a href="#indexing">Indexing</a>
+    <a href="#slicing">Slicing</a>
+    <a href="#concat">Concatenation</a>
+    <a href="#methods">Methods</a>
+    <a href="#formatting">Formatting</a>
+    <a href="#checking">Checking</a>
+    <a href="#split">Split & Join</a>
+    <a href="#escape">Escape Chars</a>
+    <a href="#immutable">Immutability</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ══════════════════════════════════════════════
+       1. CREATING STRINGS
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="creating">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2>Creating Strings</h2>
+    </div>
+    <p class="prose">A <strong>string</strong> is a sequence of characters — letters, digits, spaces, symbols. You can create one using single quotes, double quotes, or triple quotes.</p>
+
+    <div class="code-block">
+      <div class="code-label">creating_strings.py</div>
+      <pre><span class="cm"># --- Single and Double Quotes ---</span>
+<span class="var">name</span>    <span class="op">=</span> <span class="str">'Alice'</span>          <span class="cm"># single quotes</span>
+<span class="var">city</span>    <span class="op">=</span> <span class="str">"Bengaluru"</span>     <span class="cm"># double quotes (same result)</span>
+<span class="var">message</span> <span class="op">=</span> <span class="str">"It's a nice day"</span> <span class="cm"># double quotes let you use apostrophe inside</span>
+
+<span class="cm"># --- Triple Quotes (for multi-line strings) ---</span>
+<span class="var">bio</span> <span class="op">=</span> <span class="str">"""Hello!
+I am learning Python.
+Strings are fun."""</span>
+
+<span class="fn">print</span>(name)
+<span class="fn">print</span>(city)
+<span class="fn">print</span>(message)
+<span class="fn">print</span>(bio)</pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+Alice<br>
+Bengaluru<br>
+It's a nice day<br>
+Hello!<br>
+I am learning Python.<br>
+Strings are fun.
     </div>
 
-    <script>
-        // Function to fetch the app_temp value from the API with the appended input and display it
-        function fetchAndDisplayTemperature() {
-            const input = document.getElementById("inputValue").value; // Get the input value
-            const apiUrl = `https://api.weatherbit.io/v2.0/current?&city=${input}&key=f79539052c804bf181a43e815185896a`; // Append the input to the API URL
+    <div class="callout">
+      <strong>Tip:</strong> Single and double quotes are interchangeable. Triple quotes (<code class="inline">"""..."""</code> or <code class="inline">'''...'''</code>) are great for strings that span multiple lines.
+    </div>
+  </section>
 
-            fetch(apiUrl)
-                .then(response => response.json())  // Parse the JSON response
-                .then(data => {
-                    const appTemp = data.data[0].app_temp;  // Extract the app_temp value from the API response
-                    document.getElementById("appTemp").textContent = appTemp;  // Display it in the HTML
-                })
-                .catch(error => {
-                    console.error('Error fetching data:', error);
-                    document.getElementById("appTemp").textContent = "Error fetching data"; // Handle error case
-                });
-        }
-    </script>
+
+  <!-- ══════════════════════════════════════════════
+       2. INDEXING
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="indexing">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2>Indexing — Accessing Individual Characters</h2>
+    </div>
+    <p class="prose">Each character in a string has a position called an <strong>index</strong>. Python starts counting from <strong>0</strong>. Negative indices count from the end.</p>
+
+    <div class="code-block">
+      <div class="code-label">indexing.py</div>
+      <pre><span class="var">word</span> <span class="op">=</span> <span class="str">"Python"</span>
+<span class="cm">#        P  y  t  h  o  n
+#  index: 0  1  2  3  4  5
+# neg:   -6 -5 -4 -3 -2 -1</span>
+
+<span class="fn">print</span>(word[<span class="num">0</span>])   <span class="cm"># First character</span>
+<span class="fn">print</span>(word[<span class="num">3</span>])   <span class="cm"># Character at index 3</span>
+<span class="fn">print</span>(word[<span class="num">-1</span>])  <span class="cm"># Last character (negative index)</span>
+<span class="fn">print</span>(word[<span class="num">-2</span>])  <span class="cm"># Second-to-last character</span></pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+P<br>h<br>n<br>o
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════
+       3. SLICING
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="slicing">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2>Slicing — Extracting a Portion</h2>
+    </div>
+    <p class="prose">Slicing extracts a <strong>sub-string</strong> using <code class="inline">string[start : end : step]</code>. The <em>end</em> index is <strong>not included</strong>.</p>
+
+    <div class="code-block">
+      <div class="code-label">slicing.py</div>
+      <pre><span class="var">text</span> <span class="op">=</span> <span class="str">"Hello, World!"</span>
+
+<span class="fn">print</span>(text[<span class="num">0</span>:<span class="num">5</span>])    <span class="cm"># index 0 to 4  →  "Hello"</span>
+<span class="fn">print</span>(text[<span class="num">7</span>:<span class="num">12</span>])   <span class="cm"># index 7 to 11 →  "World"</span>
+<span class="fn">print</span>(text[:<span class="num">5</span>])     <span class="cm"># start omitted → from beginning</span>
+<span class="fn">print</span>(text[<span class="num">7</span>:])     <span class="cm"># end omitted   → to the end</span>
+<span class="fn">print</span>(text[:])      <span class="cm"># copy of the whole string</span>
+
+<span class="cm"># --- Using step ---</span>
+<span class="fn">print</span>(text[::<span class="num">2</span>])    <span class="cm"># every 2nd character</span>
+<span class="fn">print</span>(text[::<span class="num">-1</span>])   <span class="cm"># reverse the string!</span></pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+Hello<br>
+World<br>
+Hello<br>
+World!<br>
+Hello, World!<br>
+Hlo ol!<br>
+!dlroW ,olleH
+    </div>
+
+    <div class="callout">
+      <strong>Remember:</strong> <code class="inline">text[start:end]</code> — the character at <em>end</em> is NOT included. Think of indices as markers between characters.
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════
+       4. CONCATENATION
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="concat">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2>Concatenation &amp; Repetition</h2>
+    </div>
+    <p class="prose">Use <strong>+</strong> to join strings together, and <strong>*</strong> to repeat a string.</p>
+
+    <div class="code-block">
+      <div class="code-label">concatenation.py</div>
+      <pre><span class="var">first</span> <span class="op">=</span> <span class="str">"Hello"</span>
+<span class="var">second</span> <span class="op">=</span> <span class="str">"World"</span>
+
+<span class="cm"># Joining with +</span>
+<span class="var">result</span> <span class="op">=</span> first <span class="op">+</span> <span class="str">", "</span> <span class="op">+</span> second <span class="op">+</span> <span class="str">"!"</span>
+<span class="fn">print</span>(result)
+
+<span class="cm"># Repeating with *</span>
+<span class="var">line</span> <span class="op">=</span> <span class="str">"-"</span> <span class="op">*</span> <span class="num">20</span>
+<span class="fn">print</span>(line)
+
+<span class="cm"># Building a greeting</span>
+<span class="var">name</span>     <span class="op">=</span> <span class="str">"Alice"</span>
+<span class="var">greeting</span> <span class="op">=</span> <span class="str">"Welcome, "</span> <span class="op">+</span> name <span class="op">+</span> <span class="str">"!"</span>
+<span class="fn">print</span>(greeting)</pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+Hello, World!<br>
+--------------------<br>
+Welcome, Alice!
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════
+       5. STRING LENGTH
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="methods">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2>String Length &amp; Common Methods</h2>
+    </div>
+    <p class="prose">Python provides built-in <strong>methods</strong> (functions attached to strings) to perform common operations. They always return a new string — the original stays unchanged.</p>
+
+    <div class="code-block">
+      <div class="code-label">length_and_case.py</div>
+      <pre><span class="var">s</span> <span class="op">=</span> <span class="str">"Hello, Python!"</span>
+
+<span class="cm"># Length — number of characters</span>
+<span class="fn">print</span>(<span class="fn">len</span>(s))          <span class="cm"># 14</span>
+
+<span class="cm"># Case conversion</span>
+<span class="fn">print</span>(s.<span class="fn">upper</span>())       <span class="cm"># all uppercase</span>
+<span class="fn">print</span>(s.<span class="fn">lower</span>())       <span class="cm"># all lowercase</span>
+<span class="fn">print</span>(s.<span class="fn">title</span>())       <span class="cm"># Title Case (first letter of each word)</span>
+<span class="fn">print</span>(s.<span class="fn">swapcase</span>())    <span class="cm"># swap upper ↔ lower</span></pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+14<br>
+HELLO, PYTHON!<br>
+hello, python!<br>
+Hello, Python!<br>
+hELLO, pYTHON!
+    </div>
+
+    <div class="code-block">
+      <div class="code-label">strip_replace.py</div>
+      <pre><span class="var">messy</span> <span class="op">=</span> <span class="str">"   hello world   "</span>
+
+<span class="cm"># Remove leading/trailing spaces</span>
+<span class="fn">print</span>(messy.<span class="fn">strip</span>())    <span class="cm"># both sides</span>
+<span class="fn">print</span>(messy.<span class="fn">lstrip</span>())   <span class="cm"># left side only</span>
+<span class="fn">print</span>(messy.<span class="fn">rstrip</span>())   <span class="cm"># right side only</span>
+
+<span class="var">phrase</span> <span class="op">=</span> <span class="str">"I love cats and cats love me"</span>
+
+<span class="cm"># Replace a word</span>
+<span class="fn">print</span>(phrase.<span class="fn">replace</span>(<span class="str">"cats"</span>, <span class="str">"dogs"</span>))
+<span class="cm"># Replace only the first occurrence</span>
+<span class="fn">print</span>(phrase.<span class="fn">replace</span>(<span class="str">"cats"</span>, <span class="str">"dogs"</span>, <span class="num">1</span>))</pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+hello world<br>
+hello world&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;hello world<br>
+I love dogs and dogs love me<br>
+I love dogs and cats love me
+    </div>
+
+    <div class="code-block">
+      <div class="code-label">find_count.py</div>
+      <pre><span class="var">sentence</span> <span class="op">=</span> <span class="str">"the cat sat on the mat"</span>
+
+<span class="cm"># Find the index of first occurrence (-1 if not found)</span>
+<span class="fn">print</span>(sentence.<span class="fn">find</span>(<span class="str">"cat"</span>))    <span class="cm"># 4</span>
+<span class="fn">print</span>(sentence.<span class="fn">find</span>(<span class="str">"dog"</span>))    <span class="cm"># -1 (not found)</span>
+
+<span class="cm"># Count how many times a substring appears</span>
+<span class="fn">print</span>(sentence.<span class="fn">count</span>(<span class="str">"the"</span>))   <span class="cm"># 2</span>
+<span class="fn">print</span>(sentence.<span class="fn">count</span>(<span class="str">"at"</span>))    <span class="cm"># 3 (cat, sat, mat)</span></pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+4<br>
+-1<br>
+2<br>
+3
+    </div>
+
+    <p class="prose" style="margin-top:20px;">Here's a quick reference for the most useful string methods:</p>
+    <table class="method-table">
+      <thead>
+        <tr>
+          <th>Method</th>
+          <th>What it does</th>
+          <th>Example</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code class="inline">.upper()</code></td>
+          <td>Convert to uppercase</td>
+          <td class="muted">"hello".upper() → "HELLO"</td>
+        </tr>
+        <tr>
+          <td><code class="inline">.lower()</code></td>
+          <td>Convert to lowercase</td>
+          <td class="muted">"HELLO".lower() → "hello"</td>
+        </tr>
+        <tr>
+          <td><code class="inline">.strip()</code></td>
+          <td>Remove whitespace from both ends</td>
+          <td class="muted">"  hi  ".strip() → "hi"</td>
+        </tr>
+        <tr>
+          <td><code class="inline">.replace(a, b)</code></td>
+          <td>Replace all occurrences of a with b</td>
+          <td class="muted">"cat".replace("c","b") → "bat"</td>
+        </tr>
+        <tr>
+          <td><code class="inline">.find(s)</code></td>
+          <td>Index of first occurrence (−1 if not found)</td>
+          <td class="muted">"hello".find("ll") → 2</td>
+        </tr>
+        <tr>
+          <td><code class="inline">.count(s)</code></td>
+          <td>Count how many times s appears</td>
+          <td class="muted">"banana".count("a") → 3</td>
+        </tr>
+        <tr>
+          <td><code class="inline">.title()</code></td>
+          <td>Capitalize first letter of each word</td>
+          <td class="muted">"hello world".title() → "Hello World"</td>
+        </tr>
+        <tr>
+          <td><code class="inline">len(s)</code></td>
+          <td>Number of characters in string</td>
+          <td class="muted">len("abc") → 3</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════
+       6. STRING FORMATTING
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="formatting">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2>String Formatting</h2>
+    </div>
+    <p class="prose">Formatting lets you embed variables <strong>inside</strong> a string. The modern and recommended way is using <strong>f-strings</strong> (formatted string literals).</p>
+
+    <div class="code-block">
+      <div class="code-label">formatting.py</div>
+      <pre><span class="var">name</span>  <span class="op">=</span> <span class="str">"Alice"</span>
+<span class="var">age</span>   <span class="op">=</span> <span class="num">25</span>
+<span class="var">score</span> <span class="op">=</span> <span class="num">98.5</span>
+
+<span class="cm"># --- f-string (modern, recommended) ---</span>
+<span class="fn">print</span>(<span class="str">f"Name: <span class="op">{name}</span>, Age: <span class="op">{age}</span>"</span>)
+
+<span class="cm"># You can include expressions directly</span>
+<span class="fn">print</span>(<span class="str">f"Next year she will be <span class="op">{age + 1}</span>"</span>)
+
+<span class="cm"># Control decimal places</span>
+<span class="fn">print</span>(<span class="str">f"Score: <span class="op">{score:.1f}</span>"</span>)    <span class="cm"># 1 decimal place</span>
+
+<span class="cm"># --- .format() method (older style) ---</span>
+<span class="fn">print</span>(<span class="str">"Hello, {}! You scored {}."</span>.<span class="fn">format</span>(name, score))
+
+<span class="cm"># --- % formatting (oldest, avoid in new code) ---</span>
+<span class="fn">print</span>(<span class="str">"Name: %s, Age: %d"</span> <span class="op">%</span> (name, age))</pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+Name: Alice, Age: 25<br>
+Next year she will be 26<br>
+Score: 98.5<br>
+Hello, Alice! You scored 98.5.<br>
+Name: Alice, Age: 25
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════
+       7. CHECKING STRINGS
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="checking">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2>Checking String Content</h2>
+    </div>
+    <p class="prose">Python has methods that return <strong>True or False</strong> to check what a string contains.</p>
+
+    <div class="code-block">
+      <div class="code-label">checking.py</div>
+      <pre><span class="cm"># Check if string contains only digits</span>
+<span class="fn">print</span>(<span class="str">"12345"</span>.<span class="fn">isdigit</span>())    <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="str">"12.5"</span>.<span class="fn">isdigit</span>())     <span class="cm"># False  (dot is not a digit)</span>
+
+<span class="cm"># Check if string contains only letters</span>
+<span class="fn">print</span>(<span class="str">"Hello"</span>.<span class="fn">isalpha</span>())    <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="str">"Hello2"</span>.<span class="fn">isalpha</span>())   <span class="cm"># False</span>
+
+<span class="cm"># Check if string is all letters + digits</span>
+<span class="fn">print</span>(<span class="str">"Hello2"</span>.<span class="fn">isalnum</span>())   <span class="cm"># True</span>
+
+<span class="cm"># Check for uppercase / lowercase</span>
+<span class="fn">print</span>(<span class="str">"HELLO"</span>.<span class="fn">isupper</span>())    <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="str">"hello"</span>.<span class="fn">islower</span>())    <span class="cm"># True</span>
+
+<span class="cm"># Check if a sub-string is inside</span>
+<span class="fn">print</span>(<span class="str">"cat"</span> <span class="kw">in</span> <span class="str">"the cat sat"</span>)   <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="str">"dog"</span> <span class="kw">in</span> <span class="str">"the cat sat"</span>)   <span class="cm"># False</span>
+
+<span class="cm"># Check start / end</span>
+<span class="var">url</span> <span class="op">=</span> <span class="str">"https://python.org"</span>
+<span class="fn">print</span>(url.<span class="fn">startswith</span>(<span class="str">"https"</span>))   <span class="cm"># True</span>
+<span class="fn">print</span>(url.<span class="fn">endswith</span>(<span class="str">".com"</span>))      <span class="cm"># False</span></pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+True<br>False<br>True<br>False<br>True<br>True<br>True<br>True<br>False<br>True<br>False
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════
+       8. SPLIT & JOIN
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="split">
+    <div class="section-header">
+      <span class="section-num">08</span>
+      <h2>Split &amp; Join</h2>
+    </div>
+    <p class="prose"><strong>split()</strong> breaks a string into a list of parts. <strong>join()</strong> does the opposite — it merges a list of strings into one.</p>
+
+    <div class="code-block">
+      <div class="code-label">split_join.py</div>
+      <pre><span class="cm"># --- split() ---</span>
+<span class="var">sentence</span> <span class="op">=</span> <span class="str">"apple banana cherry"</span>
+<span class="var">words</span> <span class="op">=</span> sentence.<span class="fn">split</span>()        <span class="cm"># split on spaces by default</span>
+<span class="fn">print</span>(words)                     <span class="cm"># ['apple', 'banana', 'cherry']</span>
+
+<span class="var">csv_line</span> <span class="op">=</span> <span class="str">"10,20,30,40"</span>
+<span class="var">numbers</span> <span class="op">=</span> csv_line.<span class="fn">split</span>(<span class="str">","</span>)   <span class="cm"># split on comma</span>
+<span class="fn">print</span>(numbers)                   <span class="cm"># ['10', '20', '30', '40']</span>
+
+<span class="cm"># --- join() ---</span>
+<span class="var">fruits</span> <span class="op">=</span> [<span class="str">"apple"</span>, <span class="str">"banana"</span>, <span class="str">"cherry"</span>]
+<span class="fn">print</span>(<span class="str">", "</span>.<span class="fn">join</span>(fruits))          <span class="cm"># join with comma+space</span>
+<span class="fn">print</span>(<span class="str">" | "</span>.<span class="fn">join</span>(fruits))         <span class="cm"># join with pipe</span>
+<span class="fn">print</span>(<span class="str">""</span>.<span class="fn">join</span>(fruits))            <span class="cm"># join with no separator</span></pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+['apple', 'banana', 'cherry']<br>
+['10', '20', '30', '40']<br>
+apple, banana, cherry<br>
+apple | banana | cherry<br>
+applebananacherry
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════
+       9. ESCAPE CHARACTERS
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="escape">
+    <div class="section-header">
+      <span class="section-num">09</span>
+      <h2>Escape Characters</h2>
+    </div>
+    <p class="prose">Some characters need a <strong>backslash \</strong> to be included inside a string. These are called escape sequences.</p>
+
+    <div class="code-block">
+      <div class="code-label">escape_chars.py</div>
+      <pre><span class="cm"># \n  → newline</span>
+<span class="fn">print</span>(<span class="str">"Line 1\nLine 2\nLine 3"</span>)
+
+<span class="cm"># \t  → tab</span>
+<span class="fn">print</span>(<span class="str">"Name:\tAlice"</span>)
+<span class="fn">print</span>(<span class="str">"Score:\t98"</span>)
+
+<span class="cm"># \'  and \"  → include quotes inside a string</span>
+<span class="fn">print</span>(<span class="str">'It\'s a beautiful day'</span>)
+<span class="fn">print</span>(<span class="str">"She said \"hello\""</span>)
+
+<span class="cm"># \\  → a literal backslash</span>
+<span class="fn">print</span>(<span class="str">"C:\\Users\\Alice\\Documents"</span>)</pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+Line 1<br>Line 2<br>Line 3<br>
+Name:&nbsp;&nbsp;&nbsp;&nbsp;Alice<br>
+Score:&nbsp;&nbsp;&nbsp;98<br>
+It's a beautiful day<br>
+She said "hello"<br>
+C:\Users\Alice\Documents
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════
+       10. IMMUTABILITY
+  ══════════════════════════════════════════════ -->
+  <section class="section" id="immutable">
+    <div class="section-header">
+      <span class="section-num">10</span>
+      <h2>Strings are Immutable</h2>
+    </div>
+    <p class="prose">Once a string is created, you <strong>cannot change individual characters</strong> in it. Any operation that "modifies" a string actually creates a brand-new string.</p>
+
+    <div class="code-block">
+      <div class="code-label">immutability.py</div>
+      <pre><span class="var">name</span> <span class="op">=</span> <span class="str">"Alice"</span>
+
+<span class="cm"># This will cause an error:</span>
+<span class="cm"># name[0] = "B"   ← TypeError: 'str' object does not support item assignment</span>
+
+<span class="cm"># Correct way: create a new string</span>
+<span class="var">new_name</span> <span class="op">=</span> <span class="str">"B"</span> <span class="op">+</span> name[<span class="num">1</span>:]   <span class="cm"># "B" + "lice"</span>
+<span class="fn">print</span>(new_name)               <span class="cm"># "Blice"</span>
+
+<span class="cm"># The original is untouched</span>
+<span class="fn">print</span>(name)                   <span class="cm"># still "Alice"</span>
+
+<span class="cm"># Methods also return new strings — they don't change the original</span>
+<span class="var">greeting</span> <span class="op">=</span> <span class="str">"hello"</span>
+<span class="var">upper</span>    <span class="op">=</span> greeting.<span class="fn">upper</span>()
+<span class="fn">print</span>(greeting)               <span class="cm"># "hello" — unchanged</span>
+<span class="fn">print</span>(upper)                  <span class="cm"># "HELLO" — new string</span></pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+Blice<br>
+Alice<br>
+hello<br>
+HELLO
+    </div>
+
+    <div class="callout">
+      <strong>Key Concept:</strong> Strings are <em>immutable</em> — they cannot be changed in-place. Every string method returns a <em>new</em> string. Always assign the result back if you want to keep it: <code class="inline">s = s.upper()</code>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════
+       BONUS: PUTTING IT TOGETHER
+  ══════════════════════════════════════════════ -->
+  <section class="section">
+    <div class="section-header">
+      <span class="section-num" style="background:rgba(240,122,255,0.1);border-color:rgba(240,122,255,0.3);color:var(--accent3)">✦ Bonus</span>
+      <h2>Putting It All Together</h2>
+    </div>
+    <p class="prose">A small program that uses many string operations at once.</p>
+
+    <div class="code-block">
+      <div class="code-label">mini_program.py</div>
+      <pre><span class="cm"># Simple Name Card Generator</span>
+
+<span class="var">raw_input</span> <span class="op">=</span> <span class="str">"  alice sharma  "</span>
+
+<span class="cm"># 1. Clean up the input</span>
+<span class="var">clean</span> <span class="op">=</span> raw_input.<span class="fn">strip</span>().<span class="fn">title</span>()   <span class="cm"># "Alice Sharma"</span>
+
+<span class="cm"># 2. Split into parts</span>
+<span class="var">parts</span>      <span class="op">=</span> clean.<span class="fn">split</span>()           <span class="cm"># ["Alice", "Sharma"]</span>
+<span class="var">first_name</span> <span class="op">=</span> parts[<span class="num">0</span>]               <span class="cm"># "Alice"</span>
+<span class="var">last_name</span>  <span class="op">=</span> parts[<span class="num">1</span>]               <span class="cm"># "Sharma"</span>
+
+<span class="cm"># 3. Create initials</span>
+<span class="var">initials</span> <span class="op">=</span> first_name[<span class="num">0</span>] <span class="op">+</span> <span class="str">"."</span> <span class="op">+</span> last_name[<span class="num">0</span>] <span class="op">+</span> <span class="str">"."</span>  <span class="cm"># "A.S."</span>
+
+<span class="cm"># 4. Build a card using f-string</span>
+<span class="var">border</span> <span class="op">=</span> <span class="str">"="</span> <span class="op">*</span> <span class="num">30</span>
+<span class="fn">print</span>(border)
+<span class="fn">print</span>(<span class="str">f"  Name     : {clean}"</span>)
+<span class="fn">print</span>(<span class="str">f"  Initials : {initials}"</span>)
+<span class="fn">print</span>(<span class="str">f"  Username : {first_name.lower()}_{last_name.lower()}"</span>)
+<span class="fn">print</span>(<span class="str">f"  Length   : {len(clean)} characters"</span>)
+<span class="fn">print</span>(border)</pre>
+    </div>
+    <div class="output-block">
+      <div class="output-label">▶ Output</div>
+==============================<br>
+&nbsp;&nbsp;Name&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: Alice Sharma<br>
+&nbsp;&nbsp;Initials : A.S.<br>
+&nbsp;&nbsp;Username : alice_sharma<br>
+&nbsp;&nbsp;Length&nbsp;&nbsp;&nbsp;: 12 characters<br>
+==============================
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Python Strings — Beginner's Teaching Material &nbsp;|&nbsp; <span>All examples run on Python 3.6+</span>
+</footer>
+
 </body>
 </html>
